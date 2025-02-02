@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Translations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .language-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .language-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+        }
+        .question {
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+        .answer {
+            color: #444;
+        }
+        .language-selector {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="bn">Bengali</option>
+        </select>
+    </div>
+
+    <div id="faqContent"></div>
+
+    <script>
+        function changeLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            fetch(`/api/faqs/?lang=${lang}`)
+                .then(response => response.json())
+                .then(data => {
+                    const faqContent = document.getElementById('faqContent');
+                    faqContent.innerHTML = '';
+                    
+                    data.forEach(faq => {
+                        const faqItem = document.createElement('div');
+                        faqItem.className = 'faq-item';
+                        faqItem.innerHTML = `
+                            <div class="question">${faq.question}</div>
+                            <div class="answer">${faq.answer}</div>
+                        `;
+                        faqContent.appendChild(faqItem);
+                    });
+                });
+        }
+
+        // Load English FAQs by default
+        changeLanguage();
+    </script>
+</body>
+</html>
